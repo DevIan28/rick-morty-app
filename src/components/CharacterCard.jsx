@@ -7,7 +7,7 @@ function CharacterCard({ image, name, species, status, onOpen }) {
       : "unknown";
 
   return (
-    <article className="card">
+    <article className="card" title={`${name} — ${species}`}>
       <img className="card-img" src={image} alt={name} loading="lazy" />
       <div className="card-body">
         <h3 className="card-title">{name}</h3>

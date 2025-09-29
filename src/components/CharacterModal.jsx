@@ -4,7 +4,7 @@ function Row({ label, children }) {
   return (
     <div className="row">
       <span className="row-label">{label}</span>
-      <div className="row-value">{children || <em>No data</em>}</div>
+      <div className="row-value">{children || <em>—</em>}</div>
     </div>
   );
 }
@@ -33,71 +33,58 @@ export default function CharacterModal({ open, onClose, character }) {
         className="modal"
         role="dialog"
         aria-modal="true"
+        aria-label={`Detalles de ${character.name}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
+        <button className="modal-close" onClick={onClose} aria-label="Cerrar">×</button>
 
         <div className="modal-header">
-          <img src={character.image} alt={character.name} className="modal-avatar" />
+          <div className="modal-avatar-wrap" aria-hidden="true">
+            <div className="modal-ring"></div>
+            <img src={character.image} alt="" className="modal-avatar" />
+          </div>
           <div>
             <h2 className="modal-title">{character.name}</h2>
-            <div className="pills">
-              <span className="pill">
-                <span className={`dot ${statusClass}`} />
-                {character.status}
-              </span>
-              <span className="pill">{character.species}</span>
+            <p className="modal-sub">
+              <strong>{character.species}</strong> &nbsp;•&nbsp; {character.gender}
+            </p>
+            <div className="pills" style={{ marginTop: 10 }}>
+              <span className="pill"><span className={`dot ${statusClass}`} />{character.status}</span>
               {character.type ? <span className="pill">{character.type}</span> : null}
-              <span className="pill">{character.gender}</span>
             </div>
           </div>
         </div>
 
         <div className="modal-body">
           <Row label="ID">{character.id}</Row>
-          <Row label="Species">{character.species}</Row>
-          <Row label="Status">{character.status}</Row>
-          <Row label="Type">{character.type || "—"}</Row>
-          <Row label="Gender">{character.gender}</Row>
           <Row label="Origin">
             {character.origin?.name}
             {character.origin?.url ? (
-              <>
-                {" "}
-                — <a href={character.origin.url} target="_blank" rel="noreferrer">API link</a>
-              </>
+              <> — <a href={character.origin.url} target="_blank" rel="noreferrer">API link</a></>
             ) : null}
           </Row>
           <Row label="Last Location">
             {character.location?.name}
             {character.location?.url ? (
-              <>
-                {" "}
-                — <a href={character.location.url} target="_blank" rel="noreferrer">API link</a>
-              </>
+              <> — <a href={character.location.url} target="_blank" rel="noreferrer">API link</a></>
             ) : null}
           </Row>
           <Row label="Image">
-            <a href={character.image} target="_blank" rel="noreferrer">
-              Open image
-            </a>
+            <a href={character.image} target="_blank" rel="noreferrer">Abrir imagen</a>
           </Row>
-          <Row label="Episode count">{character.episode?.length}</Row>
-          <Row label="Episodes (URLs)">
+          <Row label="Episodes">
             <div className="episodes">
               {character.episode?.map((ep) => (
                 <a key={ep} href={ep} target="_blank" rel="noreferrer" className="episode-link">
-                  {ep.split("/").pop()}
+                  EP {ep.split("/").pop()}
                 </a>
               ))}
             </div>
           </Row>
           <Row label="Self API URL">
-            <a href={character.url} target="_blank" rel="noreferrer">
-              {character.url}
-            </a>
+            <a href={character.url} target="_blank" rel="noreferrer">{character.url}</a>
           </Row>
-          <Row label="Created">{new Date(character.created).toLocaleString()}</Row>
+          <Row label="Creado">{new Date(character.created).toLocaleString()}</Row>
         </div>
       </div>
     </div>

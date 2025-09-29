@@ -37,6 +37,7 @@ export default function App() {
         if (res.status === 404) {
           setCharacters([]);
           setNext(null);
+          setPage(1);
           throw new Error("No se encontraron resultados para esta búsqueda.");
         }
         throw new Error("No se pudo obtener personajes");
@@ -65,65 +66,74 @@ export default function App() {
   }
 
   return (
-    <main className="container">
-      <Header />
-
-      <SearchBar
-        defaultQuery={query.name}
-        defaultStatus={query.status}
-        onSearch={handleSearch}
-      />
-
-      <div className="controls">
-        <button
-          className="btn ghost"
-          onClick={() => {
-            setQuery({ name: "", status: "all" });
-            setPage(1);
-            fetchCharacters({ reset: true });
-          }}
-          disabled={loading}
-        >
-          Reiniciar
-        </button>
+    <>
+      {/* Animated Background */}
+      <div className="bg-scene" aria-hidden="true">
+        <div className="portal"></div>
+        <div className="stars"></div>
+        <div className="stars2"></div>
       </div>
 
-      {error && <p className="error">⚠️ {error}</p>}
-      {!error && characters.length === 0 && loading && (
-        <p className="loading">Cargando personajes…</p>
-      )}
+      <main className="container">
+        <Header />
 
-      <section className="grid" aria-live="polite">
-        {characters.map((c) => (
-          <CharacterCard
-            key={c.id}
-            image={c.image}
-            name={c.name}
-            species={c.species}
-            status={c.status}
-            onOpen={() => {
-              setSelected(c);
-              setOpen(true);
+        <SearchBar
+          defaultQuery={query.name}
+          defaultStatus={query.status}
+          onSearch={handleSearch}
+        />
+
+        <div className="controls">
+          <button
+            className="btn ghost"
+            onClick={() => {
+              setQuery({ name: "", status: "all" });
+              setPage(1);
+              fetchCharacters({ reset: true });
             }}
-          />
-        ))}
-      </section>
-
-      <div className="footer-actions">
-        {next ? (
-          <button className="btn" onClick={() => fetchCharacters()} disabled={loading}>
-            {loading ? "Cargando…" : "Cargar más"}
+            disabled={loading}
+          >
+            Reiniciar
           </button>
-        ) : (
-          characters.length > 0 && <p className="empty">No hay más personajes 🎉</p>
-        )}
-      </div>
+        </div>
 
-      <CharacterModal
-        open={open}
-        onClose={() => setOpen(false)}
-        character={selected}
-      />
-    </main>
+        {error && <p className="error">⚠️ {error}</p>}
+        {!error && characters.length === 0 && loading && (
+          <p className="loading">Cargando personajes…</p>
+        )}
+
+        <section className="grid" aria-live="polite">
+          {characters.map((c) => (
+            <CharacterCard
+              key={c.id}
+              image={c.image}
+              name={c.name}
+              species={c.species}
+              status={c.status}
+              onOpen={() => {
+                setSelected(c);
+                setOpen(true);
+              }}
+            />
+          ))}
+        </section>
+
+        <div className="footer-actions">
+          {next ? (
+            <button className="btn" onClick={() => fetchCharacters()} disabled={loading}>
+              {loading ? "Cargando…" : "Cargar más"}
+            </button>
+          ) : (
+            characters.length > 0 && <p className="empty">No hay más personajes 🎉</p>
+          )}
+        </div>
+
+        <CharacterModal
+          open={open}
+          onClose={() => setOpen(false)}
+          character={selected}
+        />
+      </main>
+    </>
   );
 }
