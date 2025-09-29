@@ -53,21 +53,20 @@ export default function App() {
     }
   }, [page, query]);
 
-  // Carga inicial
+  // Carga inicial + cada vez que cambie la query (nombre/estado)
   useEffect(() => {
     fetchCharacters({ reset: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [query]);
 
+  // Actualiza la query desde la barra de búsqueda (ya dispara el efecto de arriba)
   function handleSearch({ name, status }) {
     setQuery({ name: name.trim(), status });
-    setPage(1);
-    fetchCharacters({ reset: true });
   }
 
   return (
     <>
-      {/* Fondo animado */}
+      {/* Fondo animado (de tu tema actual) */}
       <div className="bg-scene" aria-hidden="true">
         <div className="portal"></div>
         <div className="stars"></div>

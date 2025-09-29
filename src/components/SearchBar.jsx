@@ -4,14 +4,18 @@ export default function SearchBar({ defaultQuery = "", defaultStatus = "all", on
   const [name, setName] = useState(defaultQuery);
   const [status, setStatus] = useState(defaultStatus);
 
-  // Enter global para buscar
+  // Buscar mientras escribes (debounce)
   useEffect(() => {
-    function onKey(e) {
-      if (e.key === "Enter") onSearch?.({ name, status });
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [name, status, onSearch]);
+    const id = setTimeout(() => {
+      onSearch?.({ name, status });
+    }, 350); // ajuste fino si quieres más/menos delay
+    return () => clearTimeout(id);
+  }, [name]); // solo por nombre; el estado se aplica inmediato
+
+  function applyStatus(next) {
+    setStatus(next);
+    onSearch?.({ name, status: next }); // aplica de inmediato al cambiar el filtro
+  }
 
   return (
     <div className="toolbar" role="search">
@@ -40,13 +44,14 @@ export default function SearchBar({ defaultQuery = "", defaultStatus = "all", on
             role="tab"
             aria-selected={status === opt.key}
             className={status === opt.key ? "active" : ""}
-            onClick={() => setStatus(opt.key)}
+            onClick={() => applyStatus(opt.key)}
           >
             {opt.label}
           </button>
         ))}
       </div>
 
+      {/* Botón opcional (ya no es necesario) */}
       <button className="btn" onClick={() => onSearch?.({ name, status })}>
         Buscar
       </button>
@@ -54,8 +59,7 @@ export default function SearchBar({ defaultQuery = "", defaultStatus = "all", on
         className="btn ghost"
         onClick={() => {
           setName("");
-          setStatus("all");
-          onSearch?.({ name: "", status: "all" });
+          applyStatus("all");
         }}
       >
         Limpiar
