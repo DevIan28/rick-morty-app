@@ -27,6 +27,9 @@ export default function CharacterModal({ open, onClose, character }) {
       ? "dead"
       : "unknown";
 
+  // Extra: número de episodio a partir del URL, pero sin link
+  const episodeNumbers = (character.episode || []).map((ep) => ep.split("/").pop());
+
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div
@@ -57,33 +60,20 @@ export default function CharacterModal({ open, onClose, character }) {
 
         <div className="modal-body">
           <Row label="ID">{character.id}</Row>
-          <Row label="Origin">
-            {character.origin?.name}
-            {character.origin?.url ? (
-              <> — <a href={character.origin.url} target="_blank" rel="noreferrer">API link</a></>
-            ) : null}
-          </Row>
-          <Row label="Last Location">
-            {character.location?.name}
-            {character.location?.url ? (
-              <> — <a href={character.location.url} target="_blank" rel="noreferrer">API link</a></>
-            ) : null}
-          </Row>
-          <Row label="Image">
-            <a href={character.image} target="_blank" rel="noreferrer">Abrir imagen</a>
-          </Row>
+          <Row label="Origin">{character.origin?.name || "—"}</Row>
+          <Row label="Last Location">{character.location?.name || "—"}</Row>
+          <Row label="Image">Imagen disponible</Row>
+          <Row label="Episode count">{character.episode?.length ?? 0}</Row>
           <Row label="Episodes">
             <div className="episodes">
-              {character.episode?.map((ep) => (
-                <a key={ep} href={ep} target="_blank" rel="noreferrer" className="episode-link">
-                  EP {ep.split("/").pop()}
-                </a>
-              ))}
+              {episodeNumbers.length
+                ? episodeNumbers.map((n) => (
+                    <span key={n} className="episode-link">EP {n}</span>
+                  ))
+                : "—"}
             </div>
           </Row>
-          <Row label="Self API URL">
-            <a href={character.url} target="_blank" rel="noreferrer">{character.url}</a>
-          </Row>
+          <Row label="Self API URL">Disponible en la API</Row>
           <Row label="Creado">{new Date(character.created).toLocaleString()}</Row>
         </div>
       </div>

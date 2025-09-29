@@ -53,7 +53,7 @@ export default function App() {
     }
   }, [page, query]);
 
-  // Cargar inicial
+  // Carga inicial
   useEffect(() => {
     fetchCharacters({ reset: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,7 +67,7 @@ export default function App() {
 
   return (
     <>
-      {/* Animated Background */}
+      {/* Fondo animado */}
       <div className="bg-scene" aria-hidden="true">
         <div className="portal"></div>
         <div className="stars"></div>
@@ -82,20 +82,6 @@ export default function App() {
           defaultStatus={query.status}
           onSearch={handleSearch}
         />
-
-        <div className="controls">
-          <button
-            className="btn ghost"
-            onClick={() => {
-              setQuery({ name: "", status: "all" });
-              setPage(1);
-              fetchCharacters({ reset: true });
-            }}
-            disabled={loading}
-          >
-            Reiniciar
-          </button>
-        </div>
 
         {error && <p className="error">⚠️ {error}</p>}
         {!error && characters.length === 0 && loading && (
