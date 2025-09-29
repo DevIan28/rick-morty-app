@@ -1,4 +1,4 @@
-function CharacterCard({ image, name, species, status }) {
+function CharacterCard({ image, name, species, status, onOpen }) {
   const dotClass =
     status?.toLowerCase() === "alive"
       ? "alive"
@@ -19,6 +19,12 @@ function CharacterCard({ image, name, species, status }) {
             {status}
           </span>
           <span className="pill">{species}</span>
+        </div>
+
+        <div className="card-cta">
+          <button className="link" onClick={onOpen}>
+            Ver detalles →
+          </button>
         </div>
       </div>
     </article>
